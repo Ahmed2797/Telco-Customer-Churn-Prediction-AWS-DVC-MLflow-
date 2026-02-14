@@ -1,0 +1,27 @@
+# Python 3.12.3
+
+numpy==2.3.4
+pandas==2.3.3
+seaborn==0.13.2
+matplotlib==3.10.7
+scikit-learn==1.7.2
+imbalanced-learn==0.14.0
+
+xgboost
+
+pymongo==4.15.3
+python-dotenv==1.2.1
+certifi==2025.1.31
+
+evidently==0.7.15
+setuptools==80.9.0
+
+dvc==3.66.1
+neuro-mf==0.0.5
+reqsnap
+
+## dev
+mypy-boto3-s3
+
+
+-e .
