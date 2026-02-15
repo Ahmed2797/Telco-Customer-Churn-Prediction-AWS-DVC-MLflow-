@@ -8,6 +8,7 @@ scikit-learn==1.7.2
 imbalanced-learn==0.14.0
 
 xgboost
+optuna
 
 pymongo==4.15.3
 python-dotenv==1.2.1
