@@ -74,7 +74,7 @@ class Data_Insert_Mongo:
 if __name__=='__main__':
     try:
         #data_path = os.path.join(os.getcwd(), 'notebook', 'customer_churn_data.csv')
-        data_path = os.path.join(os.getcwd(), 'notebook', 'Churn_Modelling.csv')
+        data_path = os.path.join(os.getcwd(), 'notebook', 'Telco_Customer_Churn.csv')
         database_name = Data_Base_Name
         collection =  Collection_name   
 
