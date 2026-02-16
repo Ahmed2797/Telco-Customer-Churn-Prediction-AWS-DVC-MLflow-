@@ -33,13 +33,14 @@ project_config = Project_Configuration()
 @dataclass 
 class Data_Ingestion_Config:
     data_ingestion_dir = os.path.join(project_config.artifact, DATA_INGESTION_DIR)
-    data_ingestion_feature_stored_dir = os.path.join(data_ingestion_dir, DATA_INGESTION_FEATURE_STORED_DIR)
+    # Keep this path as the raw feature-store file for backward compatibility.
+    data_ingestion_feature_stored_dir = os.path.join(data_ingestion_dir, Raw_Data)
     data_ingestion_ingested_dir = os.path.join(data_ingestion_dir, DATA_INGESTION_INGESTED_DIR)
 
-    # FIXED PATHS
-    raw_path = os.path.join(data_ingestion_dir,data_ingestion_feature_stored_dir, Raw_Data)
-    train_path = os.path.join(data_ingestion_dir,data_ingestion_feature_stored_dir, Train_Data)
-    test_path = os.path.join(data_ingestion_dir,data_ingestion_feature_stored_dir, Test_Data)
+    # Canonical ingestion artifact files
+    raw_path = os.path.join(data_ingestion_dir, Raw_Data)
+    train_path = os.path.join(data_ingestion_dir, Train_Data)
+    test_path = os.path.join(data_ingestion_dir, Test_Data)
 
     split_ratio = DATA_INGESTION_SPLIT_RATIO 
     data_ingestion_collection_name = Collection_name 
