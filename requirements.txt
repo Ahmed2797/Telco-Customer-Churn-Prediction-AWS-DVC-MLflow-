@@ -9,6 +9,10 @@ imbalanced-learn==0.14.0
 
 xgboost
 optuna
+fastapi
+uvicorn
+jinja2
+python-multipart
 
 pymongo==4.15.3
 python-dotenv==1.2.1
