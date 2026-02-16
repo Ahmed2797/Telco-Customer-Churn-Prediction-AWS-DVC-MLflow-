@@ -1,0 +1,174 @@
+from project.components.data_ingestion import Data_Ingestion 
+from project.components.data_validation import Data_Validation
+from project.components.data_transformation import Data_Transformation
+from project.components.model_trainer import Model_Trainer
+from project.components.model_evaluation import Model_Evaluation
+from project.components.model_push import Model_Pusher
+
+from project.entity.config import (
+    Data_Ingestion_Config,
+    Data_Validation_Config,
+    Data_Transformation_Config,
+    Model_Trainer_Config,
+    Model_Evaluation_Config,
+    Model_Pusher_Config
+)
+
+from project.entity.artifacts import (
+    Data_Ingestion_Artifact,
+    Data_Validation_Artifact,
+    Data_Transformation_Artifact,
+    Model_Trainer_Artifact,
+    Model_Evaluation_Artifact,
+    Model_Pusher_Artifact
+)
+
+from project.exception import CustomException
+from project.logger import logging
+import sys
+
+
+class Training_Pipeline:
+    def __init__(self):
+        self.data_ingestion_config = Data_Ingestion_Config()
+        self.data_validation_config = Data_Validation_Config()
+        self.data_transformation_config = Data_Transformation_Config()
+        self.model_trainer_config = Model_Trainer_Config()
+        self.model_evaluation_config = Model_Evaluation_Config()
+        self.model_pusher_config = Model_Pusher_Config()
+
+    def get_started_data_ingestion(self) -> Data_Ingestion_Artifact:
+        try:
+            logging.info(">>>>>>>>>>>  Data Ingestion Started  >>>>>>>>>>>>")
+
+            data_ingestion = Data_Ingestion(self.data_ingestion_config)
+            data_ingestion_artifact = data_ingestion.init_data_ingestion()
+
+            logging.info(">>>>>>>>>>>  Data Ingestion Completed  >>>>>>>>>>>>")
+            logging.info(data_ingestion_artifact)
+
+            return data_ingestion_artifact
+
+        except Exception as e:
+            raise CustomException(e, sys)
+
+    def get_started_data_validation(self, data_ingestion_artifact: Data_Ingestion_Artifact) -> Data_Validation_Artifact:
+        try:
+            logging.info(">>>>>>>>>>>  Data Validation Started  >>>>>>>>>>>>")
+
+            data_validation = Data_Validation(self.data_validation_config, data_ingestion_artifact)
+            data_validation_artifact = data_validation.init_data_validation()
+
+            logging.info(">>>>>>>>>>>  Data Validation Completed  >>>>>>>>>>>>")
+            logging.info(data_validation_artifact)
+
+            return data_validation_artifact
+
+        except Exception as e:
+            raise CustomException(e, sys)
+
+    def get_started_data_transformation(
+        self,
+        data_ingestion_artifact: Data_Ingestion_Artifact,
+        data_validation_artifact: Data_Validation_Artifact
+    ) -> Data_Transformation_Artifact:
+        try:
+            logging.info(">>>>>>>>>>>  Data Transformation Started  >>>>>>>>>>>>")
+
+            data_transformation = Data_Transformation(
+                self.data_transformation_config,
+                data_ingestion_artifact,
+                data_validation_artifact
+            )
+            data_transformation_artifact = data_transformation.initiate_data_transformation()
+
+            logging.info(">>>>>>>>>>>  Data Transformation Completed  >>>>>>>>>>>>")
+            logging.info(data_transformation_artifact)
+
+            return data_transformation_artifact
+        
+
+        except Exception as e:
+            raise CustomException(e, sys)
+        
+    
+    def get_model_trainer(self,
+        data_transformation_artifact:Data_Transformation_Artifact
+    ) -> Model_Trainer_Artifact:
+        try:
+            logging.info(">>>>>>>>>>>  Model Training Started  >>>>>>>>>>>>")
+
+            model_train = Model_Trainer(
+                data_transformation_artifact,self.model_trainer_config,
+            )
+            model_trainer_artifact = model_train.init_model()
+
+            logging.info(">>>>>>>>>>>  Model Training Completed  >>>>>>>>>>>>")
+            logging.info(model_trainer_artifact)
+
+            return model_trainer_artifact
+        except Exception as e:
+            raise CustomException(e, sys)
+        
+    
+    def get_model_evalution(self,
+        data_ingestion_artifact:Data_Ingestion_Artifact,
+        model_trainer_artifact:Model_Trainer_Artifact
+    ) -> Model_Evaluation_Artifact:
+        try:
+            logging.info(">>>>>>>>>>>  Model Evalution Started  >>>>>>>>>>>>")
+
+            model_evalution = Model_Evaluation(
+                model_eval_config = self.model_evaluation_config,
+                data_ingestion_artifact = data_ingestion_artifact,
+                model_trainer_artifact = model_trainer_artifact
+
+            )
+            model_evaluation_artifact = model_evalution.initiate_model_evaluation()
+
+            logging.info(">>>>>>>>>>>  Model Evalution Completed  >>>>>>>>>>>>")
+            logging.info(model_evaluation_artifact)
+
+            return model_evaluation_artifact
+        except Exception as e:
+            raise CustomException(e, sys)
+        
+    
+    def start_model_pusher(self, model_evaluation_artifact: Model_Evaluation_Artifact) -> Model_Pusher_Artifact:
+        """
+        This method of TrainPipeline class is responsible for starting model pushing
+        """
+        try:
+            model_pusher = Model_Pusher(model_evaluation_artifact=model_evaluation_artifact,
+                                       model_pusher_config=self.model_pusher_config
+                                       )
+            model_pusher_artifact = model_pusher.initiate_model_pusher()
+            return model_pusher_artifact
+        except Exception as e:
+            raise CustomException(e, sys)
+        
+
+    def run_pipeline(self):
+        try:
+            logging.info("=" * 60)
+            logging.info("======= Training Pipeline Execution Started =======")
+
+            data_ingestion_artifact = self.get_started_data_ingestion()
+            data_validation_artifact = self.get_started_data_validation(data_ingestion_artifact)
+            data_transformation_artifact = self.get_started_data_transformation(
+                data_ingestion_artifact, data_validation_artifact
+            )
+            model_trainer_artifact = self.get_model_trainer(data_transformation_artifact)
+            model_evalution_artifact = self.get_model_evalution(data_ingestion_artifact,model_trainer_artifact)
+
+            logging.info("======= Training Pipeline Execution Completed Successfully =======")
+
+            if not model_evalution_artifact.is_model_accepted:
+                logging.info(f"Model not accepted.")
+
+            # model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact=model_evalution_artifact)
+            
+            return None
+
+        except Exception as e:
+            raise CustomException(e, sys)
