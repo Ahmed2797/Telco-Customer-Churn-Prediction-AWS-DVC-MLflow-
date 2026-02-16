@@ -1,0 +1,38 @@
+git init  # if not already a git repo
+dvc init
+git commit -m "Initialize DVC"
+
+dvc add data/customer_data.csv
+git add data/customer_data.csv.dvc .gitignore
+git commit -m "Track customer dataset with DVC"
+
+dvc stage add -n preprocess \
+    -d src/preprocess.py -d data/raw_customer_data.csv \
+    -o data/X_train_resampled.csv \
+    -o data/y_train_resampled.csv \
+    python src/preprocess.py
+
+dvc add models/xgb_model.pkl
+
+
+
+dvc push
+
+## problem face
+
+export PATH=$HOME/.local/bin:$PATH
+
+which dvc
+dvc --version
+
+    /home/ahmed/.local/bin/dvc
+    3.66.1
+
+cd ~/CV_ADD_PROJECT/MachineLearning/Customer-Churn-Prediction
+mkdir -p .dvc/cache
+export DVC_CACHE_DIR=$(pwd)/.dvc/cache
+export XDG_CACHE_HOME=$(pwd)/.dvc/cache
+
+dvc init -f
+
+
