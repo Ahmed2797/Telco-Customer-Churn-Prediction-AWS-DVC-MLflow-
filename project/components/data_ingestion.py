@@ -35,7 +35,7 @@ class Data_Ingestion:
             extract_data = Data_Extract()
             dataframe = extract_data.get_dataframe(self.ingestion_config.data_ingestion_collection_name)
 
-            feature_store = self.ingestion_config.data_ingestion_feature_stored_dir
+            feature_store = self.ingestion_config.raw_path
             os.makedirs(os.path.dirname(feature_store), exist_ok=True)
             dataframe.to_csv(feature_store, index=False, header=True)
             logging.info('Data extracted and saved successfully in feature store')
@@ -83,5 +83,4 @@ class Data_Ingestion:
         except Exception as e:
             raise CustomException(e, sys)
         
-
 
