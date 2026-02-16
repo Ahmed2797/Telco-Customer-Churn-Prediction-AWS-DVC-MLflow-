@@ -108,10 +108,10 @@ def save_numpy_array(file_path: str, array: np.ndarray) -> None:
 
         # Save the array
         np.save(file_path, array)
-        print(f"Array saved successfully at: {file_path}")
+        logging.info(f"Array saved successfully at: {file_path}")
 
     except Exception as e:
-        print(f"Error saving array: {e}")
+        raise Exception(f"Error saving array: {e}")
 
 
 
@@ -129,11 +129,10 @@ def load_numpy_array(file_path: str) -> np.ndarray:
     """
     try:
         array = np.load(file_path)
-        print(f"Array loaded successfully from: {file_path}")
+        logging.info(f"Array loaded successfully from: {file_path}")
         return array
     except Exception as e:
-        print(f"Error loading array: {e}")
-        return None
+        raise Exception(f"Error loading array: {e}")
 
 
 # def load_object(file_path: str) -> object:   
@@ -152,7 +151,7 @@ def load_object(file_path: str) -> object:
 
         return obj
     except Exception as e:
-        print(f"Error saving array: {e}")
+        raise Exception(f"Error while loading object: {e}")
 
 
 
