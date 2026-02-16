@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Telco Churn Prediction</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(120deg, #193947, #2a5a6a, #2c5364);
+    color: #f5f2f2;
+}
+.container {
+    max-width: 980px;
+    margin: 30px auto;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(59, 27, 27, 0.25);
+}
+h1 {
+    margin-top: 0;
+    font-size: 50px;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+}
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+label {
+    font-size: 20px;
+    opacity: 0.95;
+}
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #9db0fd;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+button {
+    margin-top: 20px;
+    background: #1ab380;
+    color: #f7f4f4;
+    border: none;
+    font-weight: 1000;
+    cursor: pointer;
+    font-size: 25px;
+}
+button:hover {
+    background: #039960fe;
+}
+.result {
+    margin-top: 30px;
+    padding: 30px;
+    border-radius: 30px;
+    background: rgba(3, 100, 51, 0.803);
+    border-left: 200px;
+    font-weight: 1000;
+    font-size: 25px;
+}
+.note {
+    margin-top: 20px;
+    font-size: 2px;
+    opacity: 0.9;
+}
+@media (max-width: 500px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Telco Customer Churn Prediction</h1>
+
+    <form action="/predict" method="post">
+        <div class="grid">
+            <div class="field">
+                <label>Gender</label>
+                <select name="gender" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Senior Citizen (0/1)</label>
+                <select name="SeniorCitizen" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                </select>
+            </div>
+
+            <div class="field"><label>Partner</label><select name="Partner" required><option>Yes</option><option>No</option></select></div>
+            <div class="field"><label>Dependents</label><select name="Dependents" required><option>Yes</option><option>No</option></select></div>
+
+            <div class="field"><label>Tenure (months)</label><input type="number" min="0" name="tenure" required></div>
+            <div class="field"><label>Phone Service</label><select name="PhoneService" required><option>Yes</option><option>No</option></select></div>
+
+            <div class="field"><label>Multiple Lines</label><select name="MultipleLines" required><option>No</option><option>Yes</option><option>No phone service</option></select></div>
+            <div class="field"><label>Internet Service</label><select name="InternetService" required><option>DSL</option><option>Fiber optic</option><option>No</option></select></div>
+
+            <div class="field"><label>Online Security</label><select name="OnlineSecurity" required><option>No</option><option>Yes</option><option>No internet service</option></select></div>
+            <div class="field"><label>Online Backup</label><select name="OnlineBackup" required><option>No</option><option>Yes</option><option>No internet service</option></select></div>
+
+            <div class="field"><label>Device Protection</label><select name="DeviceProtection" required><option>No</option><option>Yes</option><option>No internet service</option></select></div>
+            <div class="field"><label>Tech Support</label><select name="TechSupport" required><option>No</option><option>Yes</option><option>No internet service</option></select></div>
+
+            <div class="field"><label>Streaming TV</label><select name="StreamingTV" required><option>No</option><option>Yes</option><option>No internet service</option></select></div>
+            <div class="field"><label>Streaming Movies</label><select name="StreamingMovies" required><option>No</option><option>Yes</option><option>No internet service</option></select></div>
+
+            <div class="field"><label>Contract</label><select name="Contract" required><option>Month-to-month</option><option>One year</option><option>Two year</option></select></div>
+            <div class="field"><label>Paperless Billing</label><select name="PaperlessBilling" required><option>Yes</option><option>No</option></select></div>
+
+            <div class="field"><label>Payment Method</label><select name="PaymentMethod" required><option>Electronic check</option><option>Mailed check</option><option>Bank transfer (automatic)</option><option>Credit card (automatic)</option></select></div>
+            <div class="field"><label>Monthly Charges</label><input type="number" step="0.01" min="0" name="MonthlyCharges" required></div>
+
+            <div class="field">
+                <label>Total Charges (optional)</label>
+                <input type="number" step="0.01" min="0" name="TotalCharges" placeholder="Leave blank to auto-use MonthlyCharges">
+            </div>
+        </div>
+
+        <button type="submit">Predict Churn</button>
+    </form>
+
+    {% if result %}
+    <div class="result">Result: {{ result }}</div>
+    {% endif %}
+
+    <div class="note">Tanvir Ahmed.</div>
+</div>
+</body>
+</html>
