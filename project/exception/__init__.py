@@ -19,8 +19,13 @@ class CustomException(Exception):
     def __init__(self, error_message, error_details: sys):
         self.error_message = str(error_message)
         _, _, exc_tb = error_details.exc_info()
-        self.lineno = exc_tb.tb_lineno
-        self.file_name = exc_tb.tb_frame.f_code.co_filename  
+        if exc_tb is not None:
+            self.lineno = exc_tb.tb_lineno
+            self.file_name = exc_tb.tb_frame.f_code.co_filename
+        else:
+            # Handle exceptions raised without an active traceback context.
+            self.lineno = -1
+            self.file_name = "Unknown"
         logging.error(self.__str__())  
 
     def __str__(self):
