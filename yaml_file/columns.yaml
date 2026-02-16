@@ -27,6 +27,12 @@ numerical_columns:
   - tenure
   - MonthlyCharges
   - TotalCharges
+  - gender
+  - Partner
+  - Dependents
+  - PhoneService
+  - PaperlessBilling
+
 
 binary_categorical_columns:
   gender:
