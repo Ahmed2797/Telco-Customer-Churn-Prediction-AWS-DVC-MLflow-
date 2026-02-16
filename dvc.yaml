@@ -1,0 +1,53 @@
+stages:
+  data_ingestion:
+    cmd: python main.py data_ingestion
+    deps:
+      - project/pipeline/training_pipeline.py
+      - project/components/data_ingestion.py
+      - yaml_file/columns.yaml
+      - notebook/Churn_Modelling.csv
+    outs:
+      - artifact/data_ingestion
+
+  data_validation:
+    cmd: python main.py data_validation
+    deps:
+      - project/pipeline/training_pipeline.py
+      - project/components/data_validation.py
+      - artifact/data_ingestion
+      - yaml_file/columns.yaml
+    outs:
+      - artifact/data_validation
+
+  data_transformation:
+    cmd: python main.py data_transformation
+    deps:
+      - project/pipeline/training_pipeline.py
+      - project/components/data_transformation.py
+      - artifact/data_validation
+      - yaml_file/param.yaml
+    outs:
+      - artifact/data_transform
+      #- final_model/preprocessing.pkl
+
+  # model_trainer:
+  #   cmd: python main.py model_trainer
+  #   deps:
+  #     - project/pipeline/training_pipeline.py
+  #     - project/components/model_trainer.py
+  #     - artifact/data_transform
+  #     - yaml_file/param.yaml
+  #   outs:
+  #     - artifact/model_trainer
+  #     - final_model/prediction_model/pred_model.pkl
+
+  # model_evaluation:
+  #   cmd: python main.py model_evaluation
+  #   deps:
+  #     - project/pipeline/training_pipeline.py
+  #     - project/components/model_evalution.py
+  #     - final_model/prediction_model/pred_model.pkl
+  #     - artifact/model_trainer
+  #   outs:
+  #     - artifact/model_evaluation
+
